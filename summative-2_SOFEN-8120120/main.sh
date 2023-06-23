@@ -1,42 +1,56 @@
 #!/usr/bin/env bash
 # Manages the Bachelor of Software Engineering cohort list of students.
 
-while true;
-do
-    read -rp "What operation would you like to perform {Create|View|Delete|Update|Exit}: " name
-    case $name in
-	"Create")
-	    read -rp "Enter student email: " email
-	    read -rp "Enter student age: " age
-	    read -rp "Enter student ID: " ID
-	    echo "$email:$age:$ID" >>students-list_0333.txt
-	    ;;
-	"Delete")
-	    read -rp "Enter student ID: " ID
-            grep -v $ID < students-list_0333.txt > modified-students-list_0333.txt
-            mv modified-students-list_0333.txt students-list_0333.txt
-	    ;;
-	"Update")
-	    read -rp "Enter student ID for update: " ID
-	    old=$(cat students-list_0333.txt | grep $ID)
-	    if [ -z "$old" ];
-	    then
-                echo "No ID match found"
-                continue
-	    fi
-            echo "$old"
-	    read -rp "Enter new student email: " email
-	    read -rp "Enter new student age: " age
-	    new="$email:$age:$ID"
-	    sed -i "s/$old/$new/g" students-list_0333.txt
-	    ;;
-	"View")
-	    cat students-list_0333.txt
-	    ;;
-	"Exit")
-	    break
-	    ;;
-	*)
-	    ;;
+while true; do
+    echo "Please select an option:"
+    echo "1. Create a student record"
+    echo "2. View all students"
+    echo "3. Delete a student"
+    echo "4. Update a student record"
+    echo "5. Exit"
+
+    read choice
+
+    case $choice in
+        1)
+            echo "Enter student email:"
+            read email
+            echo "Enter student age:"
+            read age
+            echo "Enter student ID:"
+            read id
+
+            echo "$email $age $id" >> students-list_0333.txt
+            ;;
+        2)
+            cat students-list_0333.txt
+            ;;
+        3)
+            echo "Enter student ID to delete:"
+            read id
+
+            sed -i "/$id/d" students-list_0333.txt
+            ;;
+        4)
+            echo "Enter student ID to update:"
+            read id
+
+            sed -i "/$id/d" students-list_0333.txt
+
+            echo "Enter updated student email:"
+            read email
+            echo "Enter updated student age:"
+            read age
+            echo "Enter updated student ID:"
+            read id
+
+            echo "$email $age $id" >> students-list_0333.txt
+            ;;
+        5)
+            exit 0
+            ;;
+        *)
+            echo "Invalid choice"
+            ;;
     esac
 done
